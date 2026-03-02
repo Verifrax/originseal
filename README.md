@@ -14,6 +14,12 @@ STATUS: FINAL
 
 ---
 
+Registered artifact. Identity governed by SPEEDKIT registry.
+
+STATUS: FINAL
+
+---
+
 **ORIGINSEAL v0.0.0** is an origin primitive.
 
 It does not decide.
