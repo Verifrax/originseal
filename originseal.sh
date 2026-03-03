@@ -17,7 +17,7 @@ git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
 INPUT="$(cat)"
 
 [ -z "$INPUT" ] && {
-  printf '%s\n' "DENIED"
+  printf "%s\n" "DENIED"
   exit 1
 }
 
@@ -26,7 +26,7 @@ TEXT="$(printf '%s' "$INPUT")"
 # --- Single-Seal Enforcement ----------------------------------------------
 
 if [ -f ORIGINSEAL.log ] && grep -q '^TIME:' ORIGINSEAL.log; then
-  printf '%s\n' "DENIED"
+  printf "%s\n" "DENIED"
   exit 1
 fi
 
