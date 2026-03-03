@@ -48,7 +48,8 @@ TIMESTAMP="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
   printf 'BIRTH_TREE: %s\n' "$BIRTH_TREE"
   printf 'ORIGIN_CONTEXT:\n%s\n' "$TEXT"
   printf "\%s\n" "---"
-} >> ORIGINSEAL.log
+}
+} >> ""
 
 # --- Verdict ---------------------------------------------------------------
 
