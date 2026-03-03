@@ -1,8 +1,8 @@
 name: Determinism Check
 
 on:
-  workflow_dispatch:
   push:
+    branches: [ "main" ]
   pull_request:
 
 jobs:
@@ -12,15 +12,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Test empty stdin → deterministic INVALID
+        shell: bash
         run: |
-          TMPDIR="20 20 12 61 79 80 81 98 702 701 33 100 204 250 395 398 399 400 703mktemp -d)"; export TMPDIR
-          WORK="/originseal-work"; mkdir -p ""
-          rsync -a --exclude ".git" . ""/
-          cd ""
           set -eu
           EXIT_CODE=0
           ./originseal.sh < /dev/null > output.txt 2>&1 || EXIT_CODE=$?
-          
           if [ "$EXIT_CODE" -eq 0 ]; then
             echo "FAIL: Empty stdin should not succeed"
             exit 1
@@ -28,50 +24,57 @@ jobs:
           echo "PASS: Empty stdin rejected with exit code $EXIT_CODE"
 
       - name: Test determinism (run twice)
+        shell: bash
         run: |
           set -eu
-          echo "test input" | ./originseal.sh > output1.txt 2>&1 || true
-          echo $? > exit1.txt
-          
-          echo "test input" | ./originseal.sh > output2.txt 2>&1 || true
-          echo $? > exit2.txt
-          
+          set +e
+          echo "test input" | ./originseal.sh > output1.txt 2>&1
+          ec1=$?
+          echo "test input" | ./originseal.sh > output2.txt 2>&1
+          ec2=$?
+          set -e
+
+          printf "%s\n" "$ec1" > exit1.txt
+          printf "%s\n" "$ec2" > exit2.txt
+
           if ! diff output1.txt output2.txt; then
             echo "FAIL: stdout differs"
             exit 1
           fi
-          
           if ! diff exit1.txt exit2.txt; then
             echo "FAIL: exit code differs"
             exit 1
           fi
-          
           echo "PASS: determinism verified"
 
       - name: Test no state mutation
-          shell: bash
-          run: |
-            set -eu
-            TMPDIR="${RUNNER_TEMP:-/tmp}/originseal-mut-${RANDOM}"
-            mkdir -p "$TMPDIR"
-            cp -f ./originseal.sh "$TMPDIR/"
-            cd "$TMPDIR"
-            chmod +x ./originseal.sh
-            BEFORE="$(mktemp)"; AFTER="$(mktemp)"
-            find . -maxdepth 1 -type f | LC_ALL=C sort >"$BEFORE"
-            echo "test input" | ./originseal.sh >/dev/null 2>&1 || true
-            find . -maxdepth 1 -type f | LC_ALL=C sort >"$AFTER"
-            if ! diff "$BEFORE" "$AFTER"; then
-              echo "FAIL: filesystem mutated"
-              exit 1
-            fi
-            echo "PASS: no workspace mutation"
+        shell: bash
         run: |
           set -eu
-          env | sort > env_before.txt
+          TMPDIR="${RUNNER_TEMP:-/tmp}/originseal-mut-${RANDOM}"
+          mkdir -p "$TMPDIR"
+          cp -f ./originseal.sh "$TMPDIR/"
+          cd "$TMPDIR"
+          chmod +x ./originseal.sh
+
+          BEFORE="$(mktemp)"; AFTER="$(mktemp)"
+          find . -maxdepth 1 -type f | LC_ALL=C sort >"$BEFORE"
+          echo "test input" | ./originseal.sh >/dev/null 2>&1 || true
+          find . -maxdepth 1 -type f | LC_ALL=C sort >"$AFTER"
+
+          if ! diff "$BEFORE" "$AFTER"; then
+            echo "FAIL: filesystem mutated"
+            exit 1
+          fi
+          echo "PASS: no workspace mutation"
+
+      - name: Test no env mutation
+        shell: bash
+        run: |
+          set -eu
+          env | LC_ALL=C sort > env_before.txt
           echo "test" | ./originseal.sh > /dev/null 2>&1 || true
-          env | sort > env_after.txt
-          
+          env | LC_ALL=C sort > env_after.txt
           if ! diff env_before.txt env_after.txt; then
             echo "FAIL: environment mutated"
             exit 1
@@ -82,13 +85,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Verify VERSION is locked at v0.0.0
+        shell: bash
         run: |
+          set -eu
           VERSION=$(head -1 VERSION)
           if [ "$VERSION" != "v0.0.0" ]; then
             echo "FAIL: VERSION must be v0.0.0, got $VERSION"
             exit 1
           fi
           echo "PASS: VERSION locked at v0.0.0"
-
