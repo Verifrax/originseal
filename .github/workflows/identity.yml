@@ -1,14 +1,10 @@
 name: Identity
 
 on:
-  workflow_dispatch:
   push:
-    paths:
-      - 'README.md'
+    branches: [ "main" ]
   pull_request:
-    paths:
-      - 'README.md'
-
+  workflow_dispatch:
 permissions:
   contents: read
 
