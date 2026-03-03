@@ -25,10 +25,6 @@ TEXT="$(printf '%s' "$INPUT")"
 
 # --- Single-Seal Enforcement ----------------------------------------------
 
-if [ -f ORIGINSEAL.log ] && grep -q '^TIME:' ORIGINSEAL.log; then
-  printf "%s\n" "DENIED"
-  exit 1
-fi
 
 # --- Origin Context --------------------------------------------------------
 
