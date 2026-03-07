@@ -1,0 +1,26 @@
+{
+  "name": "@verifrax/originseal",
+  "version": "0.1.0",
+  "description": "Verifrax primitive — origin sealing primitive for deterministic irreversible systems.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Verifrax/originseal.git"
+  },
+  "homepage": "https://github.com/Verifrax/originseal#readme",
+  "bugs": {
+    "url": "https://github.com/Verifrax/originseal/issues"
+  },
+  "bin": {
+    "originseal": "./originseal.sh"
+  },
+  "files": [
+    "originseal.sh",
+    "README.md",
+    "LICENSE",
+    "VERSION"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

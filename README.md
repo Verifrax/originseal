@@ -1,202 +1,140 @@
-```
-PRIM-006
-ORIGINSEAL
-Origin sealing
+# ORIGINSEAL
 
-STATUS: REGISTERED
-REGISTRY: https://speedkit.eu
-SNAPSHOT: https://speedkit.eu/REGISTRY_SNAPSHOT.json
-```
+Primitive ID: PRIM-001  
+Package: @verifrax/originseal  
+Binary: originseal
 
-Registered artifact. Identity governed by SPEEDKIT registry.
-
-STATUS: FINAL
+Verifrax primitive — origin sealing primitive for deterministic irreversible systems.
 
 ---
 
-Registered artifact. Identity governed by SPEEDKIT registry.
+## Status
 
-STATUS: FINAL
+Current release status: pre-stable primitive release line.
 
----
+Canonical release target:
 
-**ORIGINSEAL v0.0.0** is an origin primitive.
+package version: 0.1.0  
+tag: v0.1.0
 
-It does not decide.
-It does not verify.
-It does not witness.
-It does not execute.
-It does not enforce.
-
-It **seals origin**.
-
-ORIGINSEAL exists to mark the first irreversible moment something comes into being.
+ORIGINSEAL is part of the Verifrax primitive layer and follows the canonical primitive governance, naming, version, and packaging rules.
 
 ---
 
-## Philosophy
+## Purpose
 
-Most disputes do not begin at failure.
-They begin at origin.
+ORIGINSEAL establishes the first deterministic origin anchor of an artifact.
 
-ORIGINSEAL exists to answer a question that must only be answered once:
+Before custody, time ordering, verification, attestation, judgment, or termination can occur, an artifact must have a fixed origin moment.
 
-> **Where did this come from, originally?**
-
-Not who claims it now.
-Not who modified it later.
-Not who interprets it.
-
-Only origin.
-
-Once sealed, origin cannot be replaced.
+ORIGINSEAL provides that anchor.
 
 ---
 
-## What ORIGINSEAL Is
+## What This Primitive Does
 
-ORIGINSEAL is a **provenance primitive**.
-
-It binds:
-
-* Initial input (stdin)
-* Repository identity
-* Timestamp
-* First observer context
-
-Into a single, immutable origin record.
-
-The result is **genesis evidence**.
+- seals the first identifiable origin state of an artifact
+- binds the artifact to a deterministic origin identity
+- emits a stable origin result that downstream primitives can consume
 
 ---
 
-## What It Is Not
+## What This Primitive Does Not Do
 
-* Not a verifier
-* Not a validator
-* Not a judge
-* Not a witness of ongoing state
-* Not a versioning system
-* Not an access control mechanism
-
-Anything that evaluates, modifies, or approves content is out of scope.
+- does not preserve custody
+- does not determine temporal ordering beyond origin
+- does not verify correctness
+- does not witness or attest
+- does not judge validity
+- does not terminate lifecycle
 
 ---
 
-## Behavior
+## Behavioral Contract
 
-* Consumes input exclusively via `stdin`
-* Refuses silent invocation
-* Requires explicit declaration of origin intent
-* Records the first sealing event only
-* Appends origin records to an immutable ledger
-* Emits exactly one verdict
-* Exits immediately after sealing
+Invocation model:
 
-No retries.
-No flags.
-No configuration.
+executable: originseal  
+package: @verifrax/originseal  
+runtime: CLI-first
 
----
+The primitive operates on explicit artifact input.
 
-## Verdicts
+If no valid input artifact exists, ORIGINSEAL must not produce a fabricated origin state.
 
-ORIGINSEAL emits exactly one of the following:
+Exit codes:
 
-* `SEALED` — origin successfully recorded
-* `DENIED` — origin cannot be sealed (invalid or ambiguous)
-
-The verdict concerns **genesis**, not correctness.
+0 — origin sealed successfully  
+non-zero — invocation failed or contract violated
 
 ---
 
 ## Usage
 
-ORIGINSEAL is never run casually.
-It is invoked only at the moment of creation.
+Install:
 
-```sh
-<origin-context> | ./originseal.sh
-```
+npm install -g @verifrax/originseal
 
-### Example
+Execute:
 
-```sh
-echo "initial publication of artifact" | ./originseal.sh
-```
+originseal artifact.json
 
-If origin conditions are satisfied:
+stdin example:
 
-```text
-SEALED
-```
-
-If origin is ambiguous or already sealed:
-
-```text
-DENIED
-```
+cat artifact.json | originseal
 
 ---
 
-## Contract
+## Determinism Guarantees
 
-Once sealed:
+For identical canonical input, ORIGINSEAL must produce identical origin output.
 
-* Origin is fixed
-* Later claims are subordinate
-* Disputes shift from authorship to custody
-* Responsibility attaches permanently
-
-ORIGINSEAL guarantees **non-replaceable origin**.
+No hidden environmental state may influence the result.
 
 ---
 
-## Relationship to Other Artifacts
+## Security Model
 
-* **GUILLOTINE** — executes
-* **IRREVOCULL** — judges
-* **ATTESTORIUM** — witnesses
-* **VALIDEXOR** — verifies
-* **LIMENWARD** — guards transitions
-* **ORIGINSEAL** — seals genesis
+ORIGINSEAL prevents ambiguity about the first existence of an artifact.
 
-Each artifact occupies exactly one irreversible role.
-None overlap.
+It does not protect against later lifecycle risks such as custody loss, verification failure, or governance disputes.
+
+Those responsibilities belong to downstream primitives.
 
 ---
 
-## Warning
+## Relationship to Other Primitives
 
-Sealing origin creates ownership gravity.
+Canonical primitive order:
 
-Once sealed, you cannot claim ignorance.
-You cannot claim coincidence.
-You cannot claim replacement.
+1 originseal  
+2 archicustos  
+3 kairoclasp  
+4 limenward  
+5 validexor  
+6 attestorium  
+7 irrevocull  
+8 guillotine
 
-That is the point.
+Repositories:
+
+https://github.com/Verifrax/originseal  
+https://github.com/Verifrax/archicustos  
+https://github.com/Verifrax/kairoclasp  
+https://github.com/Verifrax/limenward  
+https://github.com/Verifrax/validexor  
+https://github.com/Verifrax/attestorium  
+https://github.com/Verifrax/irrevocull  
+https://github.com/Verifrax/guillotine
 
 ---
 
-## About
+## Installation
 
-ORIGINSEAL is a minimal, deterministic origin-sealing primitive for irreversible systems.
-
-If origin does not matter, do not use it.
-If it does, nothing else is sufficient.
+npm install -g @verifrax/originseal
 
 ---
 
-## Responsibility Boundary
+## License
 
-This software is provided under the MIT License.
-
-The MIT License permits use, copying, modification, and redistribution of the code, but it does not provide assurance, certification, audit defense, operational guarantees, or liability coverage.
-
-Use of this software in environments where failure, compliance, legal exposure, or irreversible decisions matter requires an accountable party.
-
-The original maintainer is available for assurance, adaptation, and responsibility when such accountability is required.
-
-Contact: contact@speedkit.eu
-
-Authoritative signed records are issued separately and are not produced by the software.
+MIT

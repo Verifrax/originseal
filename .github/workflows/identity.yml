@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
   workflow_dispatch:
+
 permissions:
   contents: read
 
@@ -14,11 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify README identity (PRIM-006)
+      - name: Verify README identity (PRIM-001)
         run: |
           set -euo pipefail
-          HEADER=$(sed -n '/^```$/,/^```$/p' README.md | head -10)
-          echo "$HEADER" | grep -q '^PRIM-006$' || { echo "FAIL: PRIM-006 not found"; exit 1; }
-          echo "$HEADER" | grep -q '^STATUS: REGISTERED$' || { echo "FAIL: STATUS missing"; exit 1; }
-          echo "$HEADER" | grep -q '^REGISTRY: https://speedkit.eu$' || { echo "FAIL: REGISTRY missing"; exit 1; }
-          echo "PASS: PRIM-006 identity verified"
+          grep -q "^# ORIGINSEAL$" README.md || { echo "FAIL: title missing"; exit 1; }
+          grep -q "^Primitive ID: PRIM-001" README.md || { echo "FAIL: PRIM-001 not found"; exit 1; }
+          grep -q "^Package: @verifrax/originseal" README.md || { echo "FAIL: package line missing"; exit 1; }
+          grep -q "^Binary: originseal" README.md || { echo "FAIL: binary line missing"; exit 1; }
+          echo "PASS: PRIM-001 identity verified"
