@@ -1,5 +1,9 @@
 # ORIGINSEAL
 
+Package: @verifrax/originseal
+Binary: originseal
+Repository: Verifrax/originseal
+
 Primitive ID: PRIM-001
 Package: @verifrax/originseal
 Binary: originseal
